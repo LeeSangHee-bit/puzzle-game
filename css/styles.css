@@ -14,7 +14,7 @@ body {
 }
 
 .game {
-  width: min(100%, 560px);
+  width: min(100%, 720px);
 }
 
 .game-header {
@@ -75,8 +75,8 @@ h1 {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
 }
 
 .card {
@@ -100,15 +100,15 @@ h1 {
 .card::before {
   content: "?";
   color: #ffffff;
-  font-size: 42px;
+  font-size: 34px;
   font-weight: 700;
 }
 
-/* 카드가 열렸을 때 동물 이미지가 보이도록 처리합니다. */
+/* 카드가 열렸을 때 과일 이미지가 보이도록 처리합니다. */
 .card-image {
   display: none;
-  width: 76%;
-  height: 76%;
+  width: 80%;
+  height: 80%;
   pointer-events: none;
   user-select: none;
 }
@@ -153,10 +153,10 @@ h1 {
   }
 
   .board {
-    gap: 8px;
+    gap: 6px;
   }
 
   .card::before {
-    font-size: 34px;
+    font-size: 26px;
   }
 }

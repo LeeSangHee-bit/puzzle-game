@@ -1,13 +1,23 @@
 const PuzzleGame = {
-  animals: [
-    { id: "cat", name: "고양이", color: "#f4a261", accent: "#e76f51" },
-    { id: "dog", name: "강아지", color: "#bc8a5f", accent: "#8d5524" },
-    { id: "panda", name: "판다", color: "#f8f9fa", accent: "#2f3437" },
-    { id: "fox", name: "여우", color: "#f77f00", accent: "#d95d00" },
-    { id: "bear", name: "곰", color: "#8d6e63", accent: "#5d4037" },
-    { id: "rabbit", name: "토끼", color: "#f8c8dc", accent: "#d98bae" },
-    { id: "lion", name: "사자", color: "#d4a017", accent: "#8f5f00" },
-    { id: "koala", name: "코알라", color: "#9e9e9e", accent: "#616161" }
+  fruits: [
+    { id: "apple", name: "사과", color: "#e63946", accent: "#9d0208" },
+    { id: "banana", name: "바나나", color: "#ffd166", accent: "#f4a261" },
+    { id: "grape", name: "포도", color: "#7b2cbf", accent: "#5a189a" },
+    { id: "orange", name: "오렌지", color: "#f77f00", accent: "#d95d00" },
+    { id: "strawberry", name: "딸기", color: "#ef476f", accent: "#c9184a" },
+    { id: "watermelon", name: "수박", color: "#2a9d8f", accent: "#e63946" },
+    { id: "peach", name: "복숭아", color: "#ffb4a2", accent: "#e5989b" },
+    { id: "kiwi", name: "키위", color: "#8ac926", accent: "#6a994e" },
+    { id: "lemon", name: "레몬", color: "#f9dc5c", accent: "#f4c430" },
+    { id: "cherry", name: "체리", color: "#d90429", accent: "#8d0801" },
+    { id: "pineapple", name: "파인애플", color: "#f4d35e", accent: "#5f8d4e" },
+    { id: "mango", name: "망고", color: "#ffbe0b", accent: "#fb8500" },
+    { id: "pear", name: "배", color: "#c7f464", accent: "#8ab17d" },
+    { id: "blueberry", name: "블루베리", color: "#4361ee", accent: "#3a0ca3" },
+    { id: "plum", name: "자두", color: "#9d4edd", accent: "#5a189a" },
+    { id: "melon", name: "멜론", color: "#b5e48c", accent: "#76c893" },
+    { id: "coconut", name: "코코넛", color: "#bc8a5f", accent: "#6f4e37" },
+    { id: "lime", name: "라임", color: "#70e000", accent: "#38b000" }
   ],
   checkDelay: 700,
   state: null,
@@ -26,16 +36,16 @@ const PuzzleGame = {
     };
   },
 
-  // 동물 8쌍을 만들어 4x4 카드 데이터로 변환합니다.
+  // 과일 18쌍을 만들어 6x6 카드 데이터로 변환합니다.
   createCards() {
-    const animalPairs = [...this.animals, ...this.animals];
-    const shuffledAnimals = PuzzleUtil.shuffle(animalPairs);
+    const fruitPairs = [...this.fruits, ...this.fruits];
+    const shuffledFruits = PuzzleUtil.shuffle(fruitPairs);
 
-    return shuffledAnimals.map((animal, index) => ({
+    return shuffledFruits.map((fruit, index) => ({
       id: index,
-      animalId: animal.id,
-      animalName: animal.name,
-      imageUrl: PuzzleUtil.createAnimalImageUrl(animal),
+      fruitId: fruit.id,
+      fruitName: fruit.name,
+      imageUrl: PuzzleUtil.createFruitImageUrl(fruit),
       isFlipped: false,
       isMatched: false
     }));
@@ -44,7 +54,7 @@ const PuzzleGame = {
   // 게임 상태 영역의 숫자를 갱신합니다.
   updateStatus() {
     this.elements.tryCountText.textContent = this.state.tryCount;
-    this.elements.matchCountText.textContent = `${this.state.matchCount} / ${this.animals.length}`;
+    this.elements.matchCountText.textContent = `${this.state.matchCount} / ${this.fruits.length}`;
   },
 
   // 카드 id로 현재 카드 객체를 찾습니다.
@@ -54,12 +64,12 @@ const PuzzleGame = {
 
   // 모든 짝을 찾았는지 판단합니다.
   checkClearCondition() {
-    if (this.state.matchCount !== this.animals.length) {
+    if (this.state.matchCount !== this.fruits.length) {
       return;
     }
 
     this.state.isCleared = true;
-    this.elements.messageElement.textContent = `클리어! ${this.state.tryCount}번 만에 모든 동물을 찾았습니다.`;
+    this.elements.messageElement.textContent = `클리어! ${this.state.tryCount}번 만에 모든 과일을 찾았습니다.`;
   },
 
   // 열려 있는 카드 2장이 같은 과일인지 확인합니다.
@@ -70,28 +80,28 @@ const PuzzleGame = {
 
     this.state.tryCount += 1;
 
-    if (firstCard.animalId === secondCard.animalId) {
+    if (firstCard.fruitId === secondCard.fruitId) {
       firstCard.isMatched = true;
       secondCard.isMatched = true;
       this.state.matchCount += 1;
       this.state.openedCardIds = [];
       this.state.isChecking = false;
-      this.elements.messageElement.textContent = `${firstCard.animalName} 짝을 찾았습니다.`;
+      this.elements.messageElement.textContent = `${firstCard.fruitName} 짝을 찾았습니다.`;
       this.updateStatus();
       this.render();
       this.checkClearCondition();
       return;
     }
 
-    this.elements.messageElement.textContent = "다른 동물입니다. 다시 시도해보세요.";
+    this.elements.messageElement.textContent = "다른 과일입니다. 다시 시도해보세요.";
     PuzzleBoard.markWrongCards([firstCardId, secondCardId]);
 
-  setTimeout(() => {
-    firstCard.isFlipped = false;
-    secondCard.isFlipped = false;
-    this.state.openedCardIds = [];
-    this.state.isChecking = false;
-    this.updateStatus();
+    setTimeout(() => {
+      firstCard.isFlipped = false;
+      secondCard.isFlipped = false;
+      this.state.openedCardIds = [];
+      this.state.isChecking = false;
+      this.updateStatus();
       this.render();
     }, this.checkDelay);
   },
@@ -122,7 +132,7 @@ const PuzzleGame = {
     this.state = this.createInitialState();
     this.state.cards = this.createCards();
 
-    this.elements.messageElement.textContent = "카드 2장을 클릭해서 같은 동물을 찾아보세요.";
+    this.elements.messageElement.textContent = "카드 2장을 클릭해서 같은 과일을 찾아보세요.";
     this.updateStatus();
     this.render();
   },

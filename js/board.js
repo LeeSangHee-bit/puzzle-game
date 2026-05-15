@@ -6,13 +6,13 @@ const PuzzleBoard = {
     this.boardElement = boardElement;
   },
 
-  // 카드 안에 들어갈 동물 이미지 요소를 만듭니다.
+  // 카드 안에 들어갈 과일 이미지 요소를 만듭니다.
   createCardImage(card) {
     const image = document.createElement("img");
 
     image.className = "card-image";
     image.src = card.imageUrl;
-    image.alt = card.animalName;
+    image.alt = card.fruitName;
     image.draggable = false;
 
     return image;
@@ -25,7 +25,7 @@ const PuzzleBoard = {
     button.type = "button";
     button.className = "card";
     button.dataset.id = card.id;
-    button.setAttribute("aria-label", `${card.animalName} 카드`);
+    button.setAttribute("aria-label", `${card.fruitName} 카드`);
 
     if (card.isFlipped) {
       button.classList.add("flipped");
@@ -41,7 +41,7 @@ const PuzzleBoard = {
     return button;
   },
 
-  // 카드 데이터를 기준으로 4x4 퍼즐 보드를 다시 그립니다.
+  // 카드 데이터를 기준으로 6x6 퍼즐 보드를 다시 그립니다.
   render(cards, onCardClick) {
     this.boardElement.innerHTML = "";
 
