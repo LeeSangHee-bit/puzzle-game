@@ -1,0 +1,162 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  background: #f1f5f4;
+  color: #202a33;
+}
+
+.game {
+  width: min(100%, 560px);
+}
+
+.game-header {
+  margin-bottom: 16px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+}
+
+#message {
+  min-height: 24px;
+  margin: 0;
+  color: #52606d;
+  font-size: 16px;
+}
+
+.status-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.status-card {
+  padding: 14px;
+  border: 1px solid #d2dde7;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.status-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: #667788;
+  font-size: 13px;
+}
+
+.status-card strong {
+  font-size: 22px;
+}
+
+.reset-button {
+  min-width: 112px;
+  border: 0;
+  border-radius: 8px;
+  background: #176b5f;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reset-button:hover {
+  background: #11574d;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.card {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #1f6f78;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(32, 42, 51, 0.14);
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  background: #175b63;
+}
+
+.card::before {
+  content: "?";
+  color: #ffffff;
+  font-size: 42px;
+  font-weight: 700;
+}
+
+/* 카드가 열렸을 때 동물 이미지가 보이도록 처리합니다. */
+.card-image {
+  display: none;
+  width: 76%;
+  height: 76%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.card.flipped,
+.card.matched {
+  background: #ffffff;
+  border: 1px solid #d2dde7;
+}
+
+.card.flipped::before,
+.card.matched::before {
+  content: "";
+}
+
+.card.flipped .card-image,
+.card.matched .card-image {
+  display: block;
+}
+
+.card.matched {
+  background: #dff5e7;
+  cursor: default;
+}
+
+.card.wrong {
+  background: #ffd7d1;
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: 16px;
+  }
+
+  .status-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .reset-button {
+    grid-column: 1 / -1;
+    min-height: 44px;
+  }
+
+  .board {
+    gap: 8px;
+  }
+
+  .card::before {
+    font-size: 34px;
+  }
+}
