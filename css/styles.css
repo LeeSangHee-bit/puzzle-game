@@ -35,7 +35,7 @@ h1 {
 
 .status-panel {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: repeat(3, 1fr) auto;
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -56,6 +56,10 @@ h1 {
 
 .status-card strong {
   font-size: 22px;
+}
+
+.timer-card strong {
+  color: #c2410c;
 }
 
 .reset-button {
@@ -144,7 +148,15 @@ h1 {
   }
 
   .status-panel {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .status-card {
+    padding: 12px 10px;
+  }
+
+  .status-card strong {
+    font-size: 19px;
   }
 
   .reset-button {

@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     messageElement: document.querySelector("#message"),
     tryCountText: document.querySelector("#try-count"),
     matchCountText: document.querySelector("#match-count"),
+    timerText: document.querySelector("#timer"),
     resetButton: document.querySelector("#reset-button")
   });
 });

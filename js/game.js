@@ -20,6 +20,8 @@ const PuzzleGame = {
     { id: "lime", name: "라임", color: "#70e000", accent: "#38b000" }
   ],
   checkDelay: 700,
+  timeLimit: 180,
+  timerId: null,
   state: null,
   elements: null,
 
@@ -30,8 +32,10 @@ const PuzzleGame = {
       openedCardIds: [],
       tryCount: 0,
       matchCount: 0,
+      remainingTime: this.timeLimit,
       isChecking: false,
       isCleared: false,
+      isTimeOver: false,
       hasReset: false
     };
   },
@@ -55,6 +59,61 @@ const PuzzleGame = {
   updateStatus() {
     this.elements.tryCountText.textContent = this.state.tryCount;
     this.elements.matchCountText.textContent = `${this.state.matchCount} / ${this.fruits.length}`;
+    this.elements.timerText.textContent = this.formatTime(this.state.remainingTime);
+  },
+
+  // 남은 초를 02:59 같은 시간 글자로 바꿉니다.
+  formatTime(totalSeconds) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  },
+
+  // 이전 타이머가 있으면 멈춥니다.
+  stopTimer() {
+    if (!this.timerId) {
+      return;
+    }
+
+    clearInterval(this.timerId);
+    this.timerId = null;
+  },
+
+  // 1초마다 남은 시간을 줄이는 타이머를 시작합니다.
+  startTimer() {
+    this.stopTimer();
+
+    this.timerId = setInterval(() => {
+      if (this.state.isCleared || this.state.isTimeOver) {
+        this.stopTimer();
+        return;
+      }
+
+      this.state.remainingTime -= 1;
+      this.updateStatus();
+
+      if (this.state.remainingTime <= 0) {
+        this.handleTimeOver();
+      }
+    }, 1000);
+  },
+
+  // 시간이 끝나면 게임을 멈춥니다.
+  handleTimeOver() {
+    this.state.remainingTime = 0;
+    this.state.isTimeOver = true;
+    this.state.isChecking = false;
+    this.state.openedCardIds = [];
+    this.state.cards.forEach((card) => {
+      if (!card.isMatched) {
+        card.isFlipped = false;
+      }
+    });
+    this.stopTimer();
+    this.elements.messageElement.textContent = "시간 종료! 다시 시작해서 도전해보세요.";
+    this.updateStatus();
+    this.render();
   },
 
   // 카드 id로 현재 카드 객체를 찾습니다.
@@ -69,6 +128,7 @@ const PuzzleGame = {
     }
 
     this.state.isCleared = true;
+    this.stopTimer();
     this.elements.messageElement.textContent = `클리어! ${this.state.tryCount}번 만에 모든 과일을 찾았습니다.`;
   },
 
@@ -108,7 +168,13 @@ const PuzzleGame = {
 
   // 카드를 클릭했을 때 뒤집고, 2장이 열리면 정답을 확인합니다.
   handleCardClick(card) {
-    if (this.state.isChecking || this.state.isCleared || card.isFlipped || card.isMatched) {
+    if (
+      this.state.isChecking ||
+      this.state.isCleared ||
+      this.state.isTimeOver ||
+      card.isFlipped ||
+      card.isMatched
+    ) {
       return;
     }
 
@@ -129,12 +195,14 @@ const PuzzleGame = {
 
   // 게임 상태를 처음으로 되돌립니다.
   reset() {
+    this.stopTimer();
     this.state = this.createInitialState();
     this.state.cards = this.createCards();
 
-    this.elements.messageElement.textContent = "카드 2장을 클릭해서 같은 과일을 찾아보세요.";
+    this.elements.messageElement.textContent = "3분 안에 같은 과일 카드를 모두 찾아보세요.";
     this.updateStatus();
     this.render();
+    this.startTimer();
   },
 
   resetFromButton() {
